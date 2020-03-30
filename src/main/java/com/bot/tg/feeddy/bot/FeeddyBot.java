@@ -1,6 +1,8 @@
 package com.bot.tg.feeddy.bot;
 
+import com.bot.tg.feeddy.command.MessageService;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -11,7 +13,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Getter
 @Component
+@RequiredArgsConstructor
 public class FeeddyBot extends TelegramLongPollingBot {
+    private final MessageService service;
     @Value("${bot.name}")
     private String botUsername;
     @Value("${bot.token}")
@@ -20,10 +24,7 @@ public class FeeddyBot extends TelegramLongPollingBot {
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
-        Message message = update.getMessage();
-        String text = message.getText();
-        Long chatId = message.getChatId();
-        SendMessage msg = new SendMessage().setChatId(chatId).setText(text);
+        SendMessage msg = service.resolve(update);
         execute(msg);
     }
 }
