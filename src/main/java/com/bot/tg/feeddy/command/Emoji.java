@@ -7,7 +7,10 @@ import static com.vdurmont.emoji.EmojiParser.parseToUnicode;
 @Getter
 public enum Emoji {
     RU_FLAG(":ru:", "ru"),
-    ENG_FLAG(":us:", "eng");
+    ENG_FLAG(":us:", "eng"),
+    PLUS("➕", "minus"),
+    MINUS("➖", "plus"),
+    CONFIG(":gear:", "config");
 
     private final String value;
     private final String name;

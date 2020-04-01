@@ -13,11 +13,13 @@ import static com.bot.tg.feeddy.command.Emoji.ENG_FLAG;
 import static com.bot.tg.feeddy.command.Emoji.RU_FLAG;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.Objects.nonNull;
 
 @Component
 @RequiredArgsConstructor
 public class ChooseLocaleCommand implements Command {
     public static final String START = "/start";
+    public static final String CHOOSE_LANGUAGE = "Choose language.\nВыберите язык.";
     private final UserRepository repository;
 
     @Override
@@ -25,7 +27,7 @@ public class ChooseLocaleCommand implements Command {
         saveUser(update);
         return new SendMessage()
                 .setChatId(update.getMessage().getChatId())
-                .setText("Choose language.\nВыбери язык.")
+                .setText(CHOOSE_LANGUAGE)
                 .setReplyMarkup(createKeyboard());
     }
 
@@ -55,6 +57,6 @@ public class ChooseLocaleCommand implements Command {
 
     @Override
     public boolean isNeeded(Update update) {
-        return update.getMessage().getText().equals(START);
+        return nonNull(update.getMessage()) && START.equals(update.getMessage().getText());
     }
 }
