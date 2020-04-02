@@ -1,6 +1,7 @@
 package com.bot.tg.feeddy.command;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import static com.vdurmont.emoji.EmojiParser.parseToUnicode;
 
@@ -10,10 +11,13 @@ public enum Emoji {
     ENG_FLAG(":us:", "ENG"),
     PLUS("➕", "minus"),
     MINUS("➖", "plus"),
-    CONFIG(":gear:", "config");
+    CONFIG(":gear:", "config"),
+    LIKE(":thumbsup:","like"),
+    DISLIKE(":thumbsdown:","dislike");
 
     private final String value;
     private final String name;
+
 
     Emoji(String value, String name) {
         this.value = parseToUnicode(value);
