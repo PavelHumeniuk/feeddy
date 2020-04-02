@@ -1,29 +1,17 @@
 package com.bot.tg.feeddy.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
-@Entity
-@Getter
-@Setter
 @AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(of = "id")
-public class Phrase {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String text;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Locale locale;
+public enum Phrase {
+    LANGUAGE_SAVED("Language saved!", "Язык сохранен!"),
+    ASK_ADD_SOURCE("Please, give me RSS link!", "Пожалуйста, дай RSS ссылку!")
+    ;
+
+    private final String eng;
+    private final String ru;
+
+    public static String getByLocale(Phrase phrase, Locale locale) {
+        return locale == Locale.RU ? phrase.ru : phrase.eng;
+    }
 }

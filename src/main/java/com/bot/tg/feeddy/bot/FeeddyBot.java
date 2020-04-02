@@ -7,8 +7,12 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
+import org.telegram.telegrambots.meta.updateshandlers.SentCallback;
 
 @Getter
 @Component
@@ -24,6 +28,32 @@ public class FeeddyBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         SendMessage msg = service.resolve(update);
+        if (update.hasCallbackQuery()) {
+            answerCallBackAsync(update.getCallbackQuery().getId());
+        }
         execute(msg);
+    }
+
+    /**
+     * send to user that button is processed
+     * use to answer for each callback query
+     */
+    private void answerCallBackAsync(String callbackQueryId) {
+        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
+        answerCallbackQuery.setShowAlert(false);
+        answerCallbackQuery.setCallbackQueryId(callbackQueryId);
+        sendApiMethodAsync(answerCallbackQuery, new SentCallback<Boolean>() {
+            @Override
+            public void onResult(BotApiMethod<Boolean> method, Boolean response) {
+            }
+
+            @Override
+            public void onError(BotApiMethod<Boolean> method, TelegramApiRequestException apiException) {
+            }
+
+            @Override
+            public void onException(BotApiMethod<Boolean> method, Exception exception) {
+            }
+        });
     }
 }
