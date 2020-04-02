@@ -1,5 +1,6 @@
 package com.bot.tg.feeddy.service;
 
+import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
@@ -16,6 +17,7 @@ public class RssService {
         URL feedSource = new URL(source);
         SyndFeedInput input = new SyndFeedInput();
         SyndFeed feed = input.build(new XmlReader(feedSource));
-        return feed.getLink();
+        SyndEntry lastPost = feed.getEntries().get(0);
+        return String.format("[%s](%s)", lastPost.getTitle(), lastPost.getLink());
     }
 }
