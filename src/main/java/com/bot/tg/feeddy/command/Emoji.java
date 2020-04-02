@@ -1,7 +1,6 @@
 package com.bot.tg.feeddy.command;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import static com.vdurmont.emoji.EmojiParser.parseToUnicode;
 
