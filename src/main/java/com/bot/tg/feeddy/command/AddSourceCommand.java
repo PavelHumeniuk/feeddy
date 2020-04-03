@@ -20,6 +20,7 @@ public class AddSourceCommand implements Command {
 
     @Override
     public SendMessage execute(Update update) {
+
         Long chatId = update.getMessage().getChatId();
         String link = rssService.parse(update.getMessage().getText());
         return new SendMessage()
