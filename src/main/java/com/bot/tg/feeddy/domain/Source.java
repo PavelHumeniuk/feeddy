@@ -24,6 +24,7 @@ public class Source {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String link;
+    private String lastPost;
     @ManyToMany(mappedBy = "subscriptions")
     private List<User> users;
 }
