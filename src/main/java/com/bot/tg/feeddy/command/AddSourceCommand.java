@@ -2,6 +2,7 @@ package com.bot.tg.feeddy.command;
 
 import com.bot.tg.feeddy.domain.Source;
 import com.bot.tg.feeddy.domain.User;
+import com.bot.tg.feeddy.entity.News;
 import com.bot.tg.feeddy.repository.UserRepository;
 import com.bot.tg.feeddy.service.RssService;
 import lombok.RequiredArgsConstructor;
@@ -30,15 +31,14 @@ public class AddSourceCommand implements Command {
     public SendMessage execute(Update update) {
         Long chatId = update.getMessage().getChatId();
         Optional<User> user = userRepository.findByChatId(chatId);
-        String linkWithDescription = rssService.parsePostLinkWithDescr(update.getMessage().getText());
-        String linkLastPost = rssService.parsePostLink(update.getMessage().getText());
+        News lastNews = rssService.parse(update.getMessage().getText());
         Source source = new Source();
-        source.setLastPost(linkLastPost);
+        source.setLastPost(lastNews.getLink());
         source.setLink(update.getMessage().getText());
         user.ifPresent(data -> data.getSubscriptions().add(source));
         return new SendMessage()
                 .setChatId(chatId)
-                .setText(linkWithDescription)
+                .setText(lastNews.getLinkWithTitle())
                 .enableMarkdownV2(true)
                 .setReplyMarkup(createKeyboard());
     }
