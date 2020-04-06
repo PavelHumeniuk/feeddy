@@ -15,6 +15,6 @@ public class News {
     private String name;
 
     public String getLinkWithTitle(){
-        return String.format("[%s](%s)", this.name, this.link);
+        return String.format("[%s](%s)", this.name.replaceAll("-", "\\\\-"), this.link);
     }
 }
