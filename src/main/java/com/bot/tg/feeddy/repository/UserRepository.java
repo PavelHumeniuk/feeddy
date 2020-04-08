@@ -1,6 +1,6 @@
 package com.bot.tg.feeddy.repository;
 
-import com.bot.tg.feeddy.domain.User;
+import com.bot.tg.feeddy.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

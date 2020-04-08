@@ -1,7 +1,7 @@
 package com.bot.tg.feeddy.repository;
 
 
-import com.bot.tg.feeddy.domain.Source;
+import com.bot.tg.feeddy.entity.Source;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

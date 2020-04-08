@@ -1,4 +1,4 @@
-package com.bot.tg.feeddy.entity;
+package com.bot.tg.feeddy.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

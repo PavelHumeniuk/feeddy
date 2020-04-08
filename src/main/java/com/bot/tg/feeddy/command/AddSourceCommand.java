@@ -1,23 +1,21 @@
 package com.bot.tg.feeddy.command;
 
-import com.bot.tg.feeddy.domain.Source;
-import com.bot.tg.feeddy.domain.User;
-import com.bot.tg.feeddy.entity.News;
-import com.bot.tg.feeddy.repository.SourceRepository;
+import com.bot.tg.feeddy.domain.TelegramUpdate;
+import com.bot.tg.feeddy.entity.Source;
+import com.bot.tg.feeddy.entity.User;
+import com.bot.tg.feeddy.domain.News;
 import com.bot.tg.feeddy.repository.UserRepository;
 import com.bot.tg.feeddy.service.RssService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.Optional;
 
-import static com.bot.tg.feeddy.command.Emoji.DISLIKE;
-import static com.bot.tg.feeddy.command.Emoji.LIKE;
+import static com.bot.tg.feeddy.domain.Emoji.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
@@ -27,20 +25,17 @@ public class AddSourceCommand implements Command {
     public static final String LINK_PATTERN = "^(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?(\\/.*)?$";
     private final RssService rssService;
     private final UserRepository userRepository;
-    private final SourceRepository sourceRepository;
 
     @Transactional
     @Override
-    public SendMessage execute(Update update) {
-        Long chatId = update.getMessage().getChatId();
+    public SendMessage execute(TelegramUpdate update) {
+        Long chatId = update.getChatId();
         Optional<User> user = userRepository.findByChatId(chatId);
-        News lastNews = rssService.getLastNews(update.getMessage().getText());
+        News lastNews = rssService.parse(update.getText());
         Source source = new Source();
-        source.setLastPost(lastNews.getLink().trim());
-        source.setLink(update.getMessage().getText().trim().replaceAll("-", "\\\\-"));
-        Source savedSource = sourceRepository.findByLink(source.getLink())
-                .orElseGet(() -> sourceRepository.save(source));
-        user.ifPresent(data -> data.getSubscriptions().add(savedSource));
+        source.setLastPost(lastNews.getLink());
+        source.setLink(update.getText());
+        user.ifPresent(data -> data.getSubscriptions().add(source));
         return new SendMessage()
                 .setChatId(chatId)
                 .setText(lastNews.getLinkWithTitle())
@@ -63,7 +58,7 @@ public class AddSourceCommand implements Command {
     }
 
     @Override
-    public boolean isNeeded(Update update) {
-        return update.getMessage() != null && update.getMessage().getText().matches(LINK_PATTERN);
+    public boolean isNeeded(TelegramUpdate update) {
+        return update.getText().matches(LINK_PATTERN);
     }
 }

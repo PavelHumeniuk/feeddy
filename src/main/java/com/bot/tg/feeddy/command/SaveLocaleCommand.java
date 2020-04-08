@@ -1,8 +1,9 @@
 package com.bot.tg.feeddy.command;
 
-import com.bot.tg.feeddy.domain.Locale;
-import com.bot.tg.feeddy.domain.Phrase;
-import com.bot.tg.feeddy.domain.User;
+import com.bot.tg.feeddy.domain.TelegramUpdate;
+import com.bot.tg.feeddy.entity.Locale;
+import com.bot.tg.feeddy.entity.Phrase;
+import com.bot.tg.feeddy.entity.User;
 import com.bot.tg.feeddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -15,12 +16,12 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 
 import java.util.Optional;
 
-import static com.bot.tg.feeddy.command.Emoji.CONFIG;
-import static com.bot.tg.feeddy.command.Emoji.ENG_FLAG;
-import static com.bot.tg.feeddy.command.Emoji.MINUS;
-import static com.bot.tg.feeddy.command.Emoji.PLUS;
-import static com.bot.tg.feeddy.command.Emoji.RU_FLAG;
-import static com.bot.tg.feeddy.domain.Phrase.LANGUAGE_SAVED;
+import static com.bot.tg.feeddy.domain.Emoji.CONFIG;
+import static com.bot.tg.feeddy.domain.Emoji.ENG_FLAG;
+import static com.bot.tg.feeddy.domain.Emoji.MINUS;
+import static com.bot.tg.feeddy.domain.Emoji.PLUS;
+import static com.bot.tg.feeddy.domain.Emoji.RU_FLAG;
+import static com.bot.tg.feeddy.entity.Phrase.LANGUAGE_SAVED;
 import static java.util.Arrays.asList;
 
 @Log4j2
@@ -31,9 +32,9 @@ public class SaveLocaleCommand implements Command {
 
     @Transactional
     @Override
-    public SendMessage execute(Update update) {
-        Long chatId = update.getCallbackQuery().getMessage().getChatId();
-        Locale locale = Locale.valueOf(update.getCallbackQuery().getData());
+    public SendMessage execute(TelegramUpdate update) {
+        Long chatId = update.getChatId();
+        Locale locale = Locale.valueOf(update.getCallbackText());
         log.info("Save locale {} for chat id {}", locale, chatId);
 
         Optional<User> user = userRepository.findByChatId(chatId);
@@ -58,9 +59,9 @@ public class SaveLocaleCommand implements Command {
     }
 
     @Override
-    public boolean isNeeded(Update update) {
-        return update.hasCallbackQuery()
-                && (ENG_FLAG.getName().equals(update.getCallbackQuery().getData())
-                || RU_FLAG.getName().equals(update.getCallbackQuery().getData()));
+    public boolean isNeeded(TelegramUpdate update) {
+        return update.hasCallback()
+                && (ENG_FLAG.getName().equals(update.getCallbackText()))
+                || RU_FLAG.getName().equals(update.getCallbackText());
     }
 }

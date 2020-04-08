@@ -1,19 +1,18 @@
 package com.bot.tg.feeddy.command;
 
-import com.bot.tg.feeddy.domain.User;
+import com.bot.tg.feeddy.domain.TelegramUpdate;
+import com.bot.tg.feeddy.entity.User;
 import com.bot.tg.feeddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import static com.bot.tg.feeddy.command.Emoji.ENG_FLAG;
-import static com.bot.tg.feeddy.command.Emoji.RU_FLAG;
+import static com.bot.tg.feeddy.domain.Emoji.ENG_FLAG;
+import static com.bot.tg.feeddy.domain.Emoji.RU_FLAG;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static java.util.Objects.nonNull;
 
 @Component
 @RequiredArgsConstructor
@@ -23,20 +22,20 @@ public class ChooseLocaleCommand implements Command {
     private final UserRepository repository;
 
     @Override
-    public SendMessage execute(Update update) {
+    public SendMessage execute(TelegramUpdate update) {
         saveUser(update);
         return new SendMessage()
-                .setChatId(update.getMessage().getChatId())
+                .setChatId(update.getChatId())
                 .setText(CHOOSE_LANGUAGE)
                 .setReplyMarkup(createKeyboard());
     }
 
-    private void saveUser(Update update) {
-        Long chatId = update.getMessage().getChatId();
+    private void saveUser(TelegramUpdate update) {
+        Long chatId = update.getChatId();
         if (!repository.existsByChatId(chatId)) {
             User user = new User();
             user.setChatId(chatId);
-            user.setName(update.getMessage().getChat().getUserName());
+            user.setName(update.getUserName());
             repository.save(user);
         }
     }
@@ -56,7 +55,7 @@ public class ChooseLocaleCommand implements Command {
     }
 
     @Override
-    public boolean isNeeded(Update update) {
-        return nonNull(update.getMessage()) && START.equals(update.getMessage().getText());
+    public boolean isNeeded(TelegramUpdate update) {
+        return START.equals(update.getText());
     }
 }

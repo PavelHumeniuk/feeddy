@@ -1,4 +1,4 @@
-package com.bot.tg.feeddy.command;
+package com.bot.tg.feeddy.domain;
 
 import lombok.Getter;
 

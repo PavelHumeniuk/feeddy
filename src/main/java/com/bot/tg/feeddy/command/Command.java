@@ -1,9 +1,9 @@
 package com.bot.tg.feeddy.command;
 
+import com.bot.tg.feeddy.domain.TelegramUpdate;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 public interface Command {
-    SendMessage execute(Update update);
-    boolean isNeeded(Update update);
+    SendMessage execute(TelegramUpdate update);
+    boolean isNeeded(TelegramUpdate update);
 }

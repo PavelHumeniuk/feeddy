@@ -1,6 +1,6 @@
 package com.bot.tg.feeddy.service;
 
-import com.bot.tg.feeddy.entity.News;
+import com.bot.tg.feeddy.domain.News;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.feed.synd.SyndFeedImpl;
