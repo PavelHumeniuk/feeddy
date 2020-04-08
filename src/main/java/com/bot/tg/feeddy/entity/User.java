@@ -1,5 +1,6 @@
 package com.bot.tg.feeddy.entity;
 
+import com.bot.tg.feeddy.domain.Locale;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -1,15 +1,12 @@
 package com.bot.tg.feeddy.bot;
 
-import com.bot.tg.feeddy.domain.News;
 import com.bot.tg.feeddy.domain.TelegramUpdate;
-import com.bot.tg.feeddy.entity.Source;
-import com.bot.tg.feeddy.repository.SourceRepository;
-import com.bot.tg.feeddy.repository.UserRepository;
 import com.bot.tg.feeddy.service.MessageService;
-import com.bot.tg.feeddy.service.RssService;
+import com.bot.tg.feeddy.service.NotificationService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -23,20 +20,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.meta.updateshandlers.SentCallback;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
+@Log4j2
 @Getter
 @Component
 @RequiredArgsConstructor
 public class FeeddyBot extends TelegramLongPollingBot {
     private final MessageService service;
-    private final RssService rssService;
-    private final SourceRepository sourceRepository;
-    private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @Value("${bot.name}")
     private String botUsername;
@@ -101,36 +91,13 @@ public class FeeddyBot extends TelegramLongPollingBot {
     //    @Scheduled(cron = "${bot.cronDelay}")
     @Transactional
     @Scheduled(fixedDelay = 10000)
-    public void sendUpdate() {
-        Map<Source, List<News>> newsBySource = sourceRepository.findAll()
-                .parallelStream()
-                .collect(Collectors.toMap(Function.identity(), this::createNews, (news, news2) -> news2));
-
-        userRepository.findAll()
-                .parallelStream()
-                .flatMap(user -> user.getSubscriptions().stream()
-                        .flatMap(key -> newsBySource.get(key).stream())
-                        .map(news -> new SendMessage(user.getChatId(), news.getLinkWithTitle()).enableMarkdownV2(true)))
-                .forEach(this::sendMessage);
-    }
-
-    private List<News> createNews(Source source) {
-        List<News> allNews = rssService.getAllNews(source.getLink());
-        List<News> result = new LinkedList<>();
-        for (News item : allNews) {
-            if (item.getLink().equals(source.getLastPost())) {
-                break;
-            }
-            result.add(item);
-        }
-        return result;
-    }
-
-    private void sendMessage(SendMessage message) {
-        try {
-            execute(message);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+    public void sendRssToUsers() {
+     notificationService.getAllMessagesForRss().forEach(sendMessage -> {
+         try {
+             execute(sendMessage);
+         } catch (TelegramApiException e) {
+             log.error(e);
+         }
+     });
     }
 }

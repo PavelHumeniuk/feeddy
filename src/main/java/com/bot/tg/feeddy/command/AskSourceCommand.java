@@ -1,7 +1,7 @@
 package com.bot.tg.feeddy.command;
 
 import com.bot.tg.feeddy.domain.TelegramUpdate;
-import com.bot.tg.feeddy.entity.Locale;
+import com.bot.tg.feeddy.domain.Locale;
 import com.bot.tg.feeddy.entity.Phrase;
 import com.bot.tg.feeddy.entity.User;
 import com.bot.tg.feeddy.repository.UserRepository;

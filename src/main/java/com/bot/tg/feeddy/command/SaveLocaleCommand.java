@@ -1,7 +1,7 @@
 package com.bot.tg.feeddy.command;
 
 import com.bot.tg.feeddy.domain.TelegramUpdate;
-import com.bot.tg.feeddy.entity.Locale;
+import com.bot.tg.feeddy.domain.Locale;
 import com.bot.tg.feeddy.entity.Phrase;
 import com.bot.tg.feeddy.entity.User;
 import com.bot.tg.feeddy.repository.UserRepository;
@@ -10,7 +10,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
