@@ -34,7 +34,7 @@ public class SaveLocaleCommand implements Command {
     @Override
     public SendMessage execute(TelegramUpdate update) {
         Long chatId = update.getChatId();
-        Locale locale = Locale.valueOf(update.getCallbackText());
+        Locale locale = Locale.valueOf(update.getText());
         log.info("Save locale {} for chat id {}", locale, chatId);
 
         Optional<User> user = userRepository.findByChatId(chatId);
@@ -60,8 +60,8 @@ public class SaveLocaleCommand implements Command {
 
     @Override
     public boolean isNeeded(TelegramUpdate update) {
-        return update.hasCallback()
-                && (ENG_FLAG.getName().equals(update.getCallbackText()))
-                || RU_FLAG.getName().equals(update.getCallbackText());
+        return update.isCallbackQuery()
+                && (ENG_FLAG.getName().equals(update.getText()))
+                || RU_FLAG.getName().equals(update.getText());
     }
 }
