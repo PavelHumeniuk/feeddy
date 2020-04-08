@@ -33,10 +33,10 @@ public class AddSourceCommand implements Command {
     public SendMessage execute(TelegramUpdate update) {
         Long chatId = update.getChatId();
         Optional<User> user = userRepository.findByChatId(chatId);
-        News lastNews = rssService.parse(update.getText());
+        News lastNews = rssService.getLastNews(update.getText());
         Source source = new Source();
         source.setLastPost(lastNews.getLink().trim());
-        source.setLink(update.getText().trim().replaceAll("-", "\\\\-"));
+        source.setLink(update.getText());
         Source savedSource = sourceRepository.findByLink(source.getLink())
                 .orElseGet(() -> sourceRepository.save(source));
         user.ifPresent(data -> data.getSubscriptions().add(savedSource));

@@ -30,4 +30,8 @@ public class Source {
     private String lastPost;
     @ManyToMany(mappedBy = "subscriptions")
     private List<User> users;
+
+    public String getLink() {
+        return link.trim().replaceAll("-", "\\\\-");
+    }
 }
