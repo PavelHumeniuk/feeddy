@@ -1,6 +1,5 @@
-package com.bot.tg.feeddy.entity;
+package com.bot.tg.feeddy.domain;
 
-import com.bot.tg.feeddy.domain.Locale;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

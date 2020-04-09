@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -13,12 +14,12 @@ import java.util.List;
 public class MessageService {
     private final List<Command> commands;
 
-    public SendMessage resolve(TelegramUpdate update) {
+    public List<SendMessage> resolve(TelegramUpdate update) {
         return commands.stream()
                 .filter(command -> command.isNeeded(update))
                 .findFirst()
                 .map(command -> command.execute(update))
                 // TODO: 3/30/2020 fix default msg
-                .orElse(new SendMessage(update.getChatId(), "Hi!"));
+                .orElse(Collections.singletonList(new SendMessage(update.getChatId(), "Hi!")));
     }
 }

@@ -12,7 +12,8 @@ public enum Emoji {
     MINUS("➖", "plus"),
     CONFIG(":gear:", "config"),
     LIKE(":thumbsup:","like"),
-    DISLIKE(":thumbsdown:","dislike");
+    DISLIKE(":thumbsdown:","dislike"),
+    DELETE(":x:","delete");
 
     private final String value;
     private final String name;

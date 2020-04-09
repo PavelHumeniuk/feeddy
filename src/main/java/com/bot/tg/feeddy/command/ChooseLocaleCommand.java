@@ -9,6 +9,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import java.util.Collections;
+import java.util.List;
+
 import static com.bot.tg.feeddy.domain.Emoji.ENG_FLAG;
 import static com.bot.tg.feeddy.domain.Emoji.RU_FLAG;
 import static java.util.Arrays.asList;
@@ -22,12 +25,12 @@ public class ChooseLocaleCommand implements Command {
     private final UserRepository repository;
 
     @Override
-    public SendMessage execute(TelegramUpdate update) {
+    public List<SendMessage> execute(TelegramUpdate update) {
         saveUser(update);
-        return new SendMessage()
+        return Collections.singletonList(new SendMessage()
                 .setChatId(update.getChatId())
                 .setText(CHOOSE_LANGUAGE)
-                .setReplyMarkup(createKeyboard());
+                .setReplyMarkup(createKeyboard()));
     }
 
     private void saveUser(TelegramUpdate update) {

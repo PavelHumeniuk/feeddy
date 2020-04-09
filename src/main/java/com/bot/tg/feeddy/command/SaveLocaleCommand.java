@@ -2,7 +2,7 @@ package com.bot.tg.feeddy.command;
 
 import com.bot.tg.feeddy.domain.TelegramUpdate;
 import com.bot.tg.feeddy.domain.Locale;
-import com.bot.tg.feeddy.entity.Phrase;
+import com.bot.tg.feeddy.domain.Phrase;
 import com.bot.tg.feeddy.entity.User;
 import com.bot.tg.feeddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.bot.tg.feeddy.domain.Emoji.CONFIG;
@@ -20,7 +22,7 @@ import static com.bot.tg.feeddy.domain.Emoji.ENG_FLAG;
 import static com.bot.tg.feeddy.domain.Emoji.MINUS;
 import static com.bot.tg.feeddy.domain.Emoji.PLUS;
 import static com.bot.tg.feeddy.domain.Emoji.RU_FLAG;
-import static com.bot.tg.feeddy.entity.Phrase.LANGUAGE_SAVED;
+import static com.bot.tg.feeddy.domain.Phrase.LANGUAGE_SAVED;
 import static java.util.Arrays.asList;
 
 @Log4j2
@@ -31,7 +33,7 @@ public class SaveLocaleCommand implements Command {
 
     @Transactional
     @Override
-    public SendMessage execute(TelegramUpdate update) {
+    public List<SendMessage> execute(TelegramUpdate update) {
         Long chatId = update.getChatId();
         Locale locale = Locale.valueOf(update.getText());
         log.info("Save locale {} for chat id {}", locale, chatId);
@@ -39,8 +41,8 @@ public class SaveLocaleCommand implements Command {
         Optional<User> user = userRepository.findByChatId(chatId);
         user.ifPresent(data -> data.setLocale(locale));
 
-        return new SendMessage(chatId, Phrase.getByLocale(LANGUAGE_SAVED, locale))
-                .setReplyMarkup(createKeyboard());
+        return Collections.singletonList(new SendMessage(chatId, Phrase.getByLocale(LANGUAGE_SAVED, locale))
+                .setReplyMarkup(createKeyboard()));
     }
 
     private ReplyKeyboardMarkup createKeyboard() {

@@ -14,6 +14,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.bot.tg.feeddy.domain.Emoji.*;
@@ -30,7 +32,7 @@ public class AddSourceCommand implements Command {
 
     @Transactional
     @Override
-    public SendMessage execute(TelegramUpdate update) {
+    public List<SendMessage> execute(TelegramUpdate update) {
         Long chatId = update.getChatId();
         Optional<User> user = userRepository.findByChatId(chatId);
         News lastNews = rssService.getLastNews(update.getText());
@@ -40,11 +42,11 @@ public class AddSourceCommand implements Command {
         Source savedSource = sourceRepository.findByLink(source.getLink())
                 .orElseGet(() -> sourceRepository.save(source));
         user.ifPresent(data -> data.getSubscriptions().add(savedSource));
-        return new SendMessage()
+        return Collections.singletonList(new SendMessage()
                 .setChatId(chatId)
                 .setText(lastNews.getLinkWithTitle())
                 .enableMarkdownV2(true)
-                .setReplyMarkup(createKeyboard());
+                .setReplyMarkup(createKeyboard()));
     }
 
     private InlineKeyboardMarkup createKeyboard() {
