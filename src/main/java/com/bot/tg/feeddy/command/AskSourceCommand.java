@@ -21,12 +21,12 @@ public class AskSourceCommand implements Command {
     private final UserRepository userRepository;
 
     @Override
-    public List<SendMessage> execute(TelegramUpdate update) {
+    public SendMessage execute(TelegramUpdate update) {
         Long chatId = update.getChatId();
         Locale locale = userRepository.findByChatId(chatId)
                 .map(User::getLocale)
                 .orElse(Locale.ENG);
-        return Collections.singletonList(new SendMessage(chatId, Phrase.getByLocale(ASK_ADD_SOURCE, locale)));
+        return new SendMessage(chatId, Phrase.getByLocale(ASK_ADD_SOURCE, locale));
     }
 
     @Override

@@ -33,7 +33,7 @@ public class SaveLocaleCommand implements Command {
 
     @Transactional
     @Override
-    public List<SendMessage> execute(TelegramUpdate update) {
+    public SendMessage execute(TelegramUpdate update) {
         Long chatId = update.getChatId();
         Locale locale = Locale.valueOf(update.getText());
         log.info("Save locale {} for chat id {}", locale, chatId);
@@ -41,8 +41,8 @@ public class SaveLocaleCommand implements Command {
         Optional<User> user = userRepository.findByChatId(chatId);
         user.ifPresent(data -> data.setLocale(locale));
 
-        return Collections.singletonList(new SendMessage(chatId, Phrase.getByLocale(LANGUAGE_SAVED, locale))
-                .setReplyMarkup(createKeyboard()));
+        return new SendMessage(chatId, Phrase.getByLocale(LANGUAGE_SAVED, locale))
+                .setReplyMarkup(createKeyboard());
     }
 
     private ReplyKeyboardMarkup createKeyboard() {

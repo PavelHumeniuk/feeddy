@@ -14,12 +14,12 @@ import java.util.List;
 public class MessageService {
     private final List<Command> commands;
 
-    public List<SendMessage> resolve(TelegramUpdate update) {
+    public SendMessage resolve(TelegramUpdate update) {
         return commands.stream()
                 .filter(command -> command.isNeeded(update))
                 .findFirst()
                 .map(command -> command.execute(update))
                 // TODO: 3/30/2020 fix default msg
-                .orElse(Collections.singletonList(new SendMessage(update.getChatId(), "Hi!")));
+                .orElse(new SendMessage(update.getChatId(), "Hi!"));
     }
 }

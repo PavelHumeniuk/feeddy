@@ -32,7 +32,7 @@ public class AddSourceCommand implements Command {
 
     @Transactional
     @Override
-    public List<SendMessage> execute(TelegramUpdate update) {
+    public SendMessage execute(TelegramUpdate update) {
         Long chatId = update.getChatId();
         Optional<User> user = userRepository.findByChatId(chatId);
         News lastNews = rssService.getLastNews(update.getText());
@@ -42,11 +42,11 @@ public class AddSourceCommand implements Command {
         Source savedSource = sourceRepository.findByLink(source.getLink())
                 .orElseGet(() -> sourceRepository.save(source));
         user.ifPresent(data -> data.getSubscriptions().add(savedSource));
-        return Collections.singletonList(new SendMessage()
+        return new SendMessage()
                 .setChatId(chatId)
                 .setText(lastNews.getLinkWithTitle())
                 .enableMarkdownV2(true)
-                .setReplyMarkup(createKeyboard()));
+                .setReplyMarkup(createKeyboard());
     }
 
     private InlineKeyboardMarkup createKeyboard() {

@@ -60,14 +60,8 @@ public class FeeddyBot extends TelegramLongPollingBot {
                     .build();
         }
 
-        service.resolve(telegramUpdate).forEach(sendMessage -> {
-            try {
-                execute(sendMessage);
-            } catch (TelegramApiException e) {
-                log.error(e);
-            }
-        });
-
+        SendMessage msg = service.resolve(telegramUpdate);
+        execute(msg);
     }
 
     /**

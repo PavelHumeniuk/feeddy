@@ -25,12 +25,12 @@ public class ChooseLocaleCommand implements Command {
     private final UserRepository repository;
 
     @Override
-    public List<SendMessage> execute(TelegramUpdate update) {
+    public SendMessage execute(TelegramUpdate update) {
         saveUser(update);
-        return Collections.singletonList(new SendMessage()
+        return new SendMessage()
                 .setChatId(update.getChatId())
                 .setText(CHOOSE_LANGUAGE)
-                .setReplyMarkup(createKeyboard()));
+                .setReplyMarkup(createKeyboard());
     }
 
     private void saveUser(TelegramUpdate update) {
