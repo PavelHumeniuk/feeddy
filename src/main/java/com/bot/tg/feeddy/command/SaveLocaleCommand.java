@@ -62,7 +62,7 @@ public class SaveLocaleCommand implements Command {
     @Override
     public boolean isNeeded(TelegramUpdate update) {
         return update.isCallbackQuery()
-                && (ENG_FLAG.getName().equals(update.getText()))
-                || RU_FLAG.getName().equals(update.getText());
+                && (ENG_FLAG.getName().equals(update.getData()))
+                || RU_FLAG.getName().equals(update.getData());
     }
 }

@@ -1,16 +1,13 @@
 package com.bot.tg.feeddy.command;
 
-import com.bot.tg.feeddy.domain.TelegramUpdate;
 import com.bot.tg.feeddy.domain.Locale;
 import com.bot.tg.feeddy.domain.Phrase;
+import com.bot.tg.feeddy.domain.TelegramUpdate;
 import com.bot.tg.feeddy.entity.User;
 import com.bot.tg.feeddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-
-import java.util.Collections;
-import java.util.List;
 
 import static com.bot.tg.feeddy.domain.Emoji.PLUS;
 import static com.bot.tg.feeddy.domain.Phrase.ASK_ADD_SOURCE;
@@ -31,6 +28,6 @@ public class AskSourceCommand implements Command {
 
     @Override
     public boolean isNeeded(TelegramUpdate update) {
-        return PLUS.getValue().equalsIgnoreCase(update.getText());
+        return PLUS.getValue().equalsIgnoreCase(update.getData());
     }
 }

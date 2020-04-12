@@ -43,7 +43,7 @@ public class FeeddyBot extends TelegramLongPollingBot {
         }
 
         if (update.hasMessage()) {
-             telegramUpdate= TelegramUpdate.builder()
+            telegramUpdate = TelegramUpdate.builder()
                     .chatId(update.getMessage().getChatId())
                     .text(update.getMessage().getText())
                     .userName(update.getMessage().getChat().getUserName())
@@ -54,7 +54,8 @@ public class FeeddyBot extends TelegramLongPollingBot {
             answerCallBackAsync(update.getCallbackQuery().getId());
             telegramUpdate= TelegramUpdate.builder()
                     .chatId(update.getCallbackQuery().getMessage().getChatId())
-                    .text(update.getCallbackQuery().getData())
+                    .text(update.getCallbackQuery().getMessage().getText())
+                    .data(update.getCallbackQuery().getData())
                     .userName(update.getCallbackQuery().getMessage().getChat().getUserName())
                     .callbackQuery(true)
                     .build();
